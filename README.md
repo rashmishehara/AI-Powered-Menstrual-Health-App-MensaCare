@@ -27,15 +27,25 @@ Our mission is to create a **comprehensive, secure, and user-friendly platform**
 - **Cloud Services:** Google Cloud Platform (GCP)  
 
 ---
+   
 
 ## 📂 Project Structure  
+
 ```bash
-.
-├── frontend/         # Flutter mobile app
-├── backend/          # Django backend services
-├── ai_models/        # Machine learning models for predictions
-├── database/         # MySQL schemas and migrations
-└── docs/             # Documentation and resources
+MensaCare/
+│
+├── frontend/                # Flutter mobile app
+│
+├── backend/                 # ML + API code (server + model)
+│   ├── venv/                # Python virtual environment
+│   ├── dataset.csv          # dataset used for training
+│   ├── train_model.py       # script for training ML model
+│   ├── server.py            # FastAPI server for predictions
+│   └── saved_models/        # trained models (.keras, .tflite etc.)
+│
+├── database/                # MySQL schemas and migrations
+│
+└── README.md                # Documentation and resources
 
 
 ## 👥 Team  
