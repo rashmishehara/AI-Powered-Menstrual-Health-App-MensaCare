@@ -48,6 +48,12 @@ MensaCare/
 └── README.md                # Documentation and resources
 
 
+## 👥 MensaCare Project Team  
+
+This document introduces the amazing team behind **MensaCare – AI-Powered Menstrual Health App**.  
+
+---
+
 ## 📌 Team Members  
 
 | Name                     | Role          |
