@@ -48,13 +48,15 @@ MensaCare/
 └── README.md                # Documentation and resources
 
 
-## 👥 Team  
+## 📌 Team Members  
 
-| Name                     | Role        |
-|--------------------------|-------------|
-| **Dr. Azmeer Mohamed**   | Supervisor  |
+| Name                     | Role          |
+|--------------------------|---------------|
+| **Dr. Azmeer Mohamed**   | Supervisor    |
 | **Ms. Rashmika Chandrasena** | Co-Supervisor |
-| **K.K.R. Shehara**     | Developer   |
-| **Y.I. Samarawickrama**| Developer   |
-| **S.G.T.A. Anusarani** | Developer   |
+| **K.K.R. Shehara**       | Developer     |
+| **Y.I. Samarawickrama**  | Developer     |
+| **S.G.T.A. Anusarani**   | Developer     |
+
+---
 
