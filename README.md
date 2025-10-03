@@ -50,11 +50,11 @@ MensaCare/
 
 ## 👥 Team  
 
-| Name                    | Role              |
-|-------------------------|-------------------|
-| **Dr. Azmeer Mohamed**  |🧑‍🏫 Supervisor   |
-| **Ms. Rashmika Chandrasena** | 👨‍⚕️ Co-Supervisor |
-| **K.K.R. Shehara**      | 👩‍💻 Developer     |
-| **Y.I. Samarawickrama** | 👨‍💻 Developer     |
-| **S.G.T.A. Anusarani**  | 👩‍💻 Developer     |
+| Name                     | Role        |
+|--------------------------|-------------|
+| **Dr. Azmeer Mohamed**   | Supervisor  |
+| **Ms. Rashmika Chandrasena** | Co-Supervisor |
+| **K.K.R. Shehara**     | Developer   |
+| **Y.I. Samarawickrama**| Developer   |
+| **S.G.T.A. Anusarani** | Developer   |
 
