@@ -56,13 +56,14 @@ This document introduces the amazing team behind **MensaCare – AI-Powered Mens
 
 ## 📌 Team Members  
 
-| Name                     | Role          |
-|--------------------------|---------------|
-| **Dr. Azmeer Mohamed**   | Supervisor    |
-| **Ms. Rashmika Chandrasena** | Co-Supervisor |
-| **K.K.R. Shehara**       | Developer     |
-| **Y.I. Samarawickrama**  | Developer     |
-| **S.G.T.A. Anusarani**   | Developer     |
+# 👥 MensaCare Project Team  
+
+- **Dr. Azmeer Mohamed** – Supervisor  
+- **Ms. Rashmika Chandrasena** – Co-Supervisor  
+- **K.K.R. Shehara** – Developer  
+- **Y.I. Samarawickrama** – Developer  
+- **S.G.T.A. Anusarani** – Developer  
 
 ---
+
 
