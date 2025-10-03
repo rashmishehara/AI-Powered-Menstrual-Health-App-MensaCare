@@ -1,4 +1,4 @@
-# AI-Powered Menstrual Health App
+# AI-Powered Menstrual Health App-MENSACARE
 
 ## 📌 Overview  
 The **AI-Powered Menstrual Health App** is a mobile application designed to help women manage their menstrual health effectively. Unlike traditional cycle tracking apps, this project leverages **Artificial Intelligence (AI)** to detect menstrual irregularities, provide **personalized health recommendations**, enable **secure teleconsultations**, and offer **private access to sanitary products**.  
@@ -47,6 +47,5 @@ MensaCare/
 │
 └── README.md                # Documentation and resources
 
----
 
 
