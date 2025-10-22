@@ -28,8 +28,24 @@ It also offers optional features such as secure health advice, private teleconsu
 - **Cloud Services:** Google Cloud Platform (GCP)  
 
 ---
-   
+## 🩺 Feature Comparison
 
+The table below compares popular existing apps with MensaCare, highlighting the features that set our app apart:
+
+| **Feature**                            | **Existing Apps** | **MensaCare App** |
+|---------------------------------------|-------------------|-------------------|
+| Track period dates                    | ✅ Yes            | ✅ Yes            |
+| Track symptoms                        | ✅ Yes            | ✅ Yes            |
+| Fertility window prediction           | ✅ Yes            | ✅ Yes            |
+| User-friendly interface               | ✅ Yes            | ✅ Yes            |
+| AI-powered abnormality detection      | ❌ No             | ✅ Yes            |
+| Personalized health recommendations   | ❌ No             | ✅ Yes            |
+| 3-month cycle pattern analysis        | ❌ No             | ✅ Yes            |
+| Private teleconsultations             | ❌ No             | ✅ Yes            |
+| Sanitary product ordering & delivery  | ❌ No             | ✅ Yes            |
+
+
+---
 ## 📂 Project Structure  
 
 ```bash
