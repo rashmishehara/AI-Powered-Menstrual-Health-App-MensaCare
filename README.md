@@ -3,9 +3,9 @@
 ## 📌 Overview  
 **MensaCare** App is an **AI-powered** menstrual health management tool. It studies each user’s cycle data, learns from it, and detects unusual patterns that may indicate irregularities. The app analyzes about three months of cycle patterns, provides information on abnormalities, and gives personalized recommendations to help users maintain their health.
 
-It also offers optional features such as secure health advice, private teleconsultations, and sanitary product ordering for extra convenience and support.
+It also offers optional features such as secure health advice, private teleconsultations, and sanitary product ordering for extra convenience and support.MensaCare keeps user data safe through strong encryption and privacy protection. By combining AI, healthcare support, and data security, the app offers a modern and comprehensive way to manage menstrual health, helping women understand their bodies better and take timely action.
 
-MensaCare keeps user data safe through strong encryption and privacy protection. By combining AI, healthcare support, and data security, the app offers a modern and comprehensive way to manage menstrual health, helping women understand their bodies better and take timely action.
+
 ---
 
 ## ✨ Features  
