@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MensaCare',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF8D6D6), // soft pink background
+        scaffoldBackgroundColor: const Color(0xFFF8D6D6),
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9B4D4B)),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(

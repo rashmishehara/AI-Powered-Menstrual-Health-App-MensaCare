@@ -85,6 +85,7 @@ flutter:
     - assets/images/shrug.png
     - assets/images/cherry-blossom.png
     - assets/images/check.png
+    - assets/images/brain.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/database_service.dart';
 import '../calendar/calendar_screen.dart';
 import '../abnormalities/abnormalities_screen.dart';
+import 'privacy_policy_page.dart';
 import '../auth/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -33,8 +34,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Logout'),
         content: const Text('Are you sure you want to logout?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Logout')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Logout'),
+          ),
         ],
       ),
     );
@@ -62,23 +69,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _editEmail() async {
     if (_user == null) return;
-    final controller = TextEditingController(text: _user!['email'] as String? ?? '');
+    final controller = TextEditingController(
+      text: _user!['email'] as String? ?? '',
+    );
     final newEmail = await showDialog<String>(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Edit Email'),
-        content: TextField(controller: controller, keyboardType: TextInputType.emailAddress),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.emailAddress,
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, controller.text.trim()), child: const Text('Save')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text.trim()),
+            child: const Text('Save'),
+          ),
         ],
       ),
     );
     if (newEmail == null || newEmail.isEmpty) return;
-    await DatabaseService.instance.updateUserEmail(userId: _user!['id'] as int, email: newEmail);
+    await DatabaseService.instance.updateUserEmail(
+      userId: _user!['id'] as int,
+      email: newEmail,
+    );
     await _load();
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Email updated')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Email updated')));
     }
   }
 
@@ -87,7 +110,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     DateTime initial = DateTime.now();
     final dobStr = _user!['dob'] as String?;
     if (dobStr != null && dobStr.isNotEmpty) {
-      try { initial = DateTime.parse(dobStr); } catch (_) {}
+      try {
+        initial = DateTime.parse(dobStr);
+      } catch (_) {}
     }
     final picked = await showDatePicker(
       context: context,
@@ -96,11 +121,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       lastDate: DateTime.now(),
     );
     if (picked == null) return;
-    final iso = '${picked.year.toString().padLeft(4,'0')}-${picked.month.toString().padLeft(2,'0')}-${picked.day.toString().padLeft(2,'0')}';
-    await DatabaseService.instance.updateUserDob(userId: _user!['id'] as int, dobIso: iso);
+    final iso =
+        '${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+    await DatabaseService.instance.updateUserDob(
+      userId: _user!['id'] as int,
+      dobIso: iso,
+    );
     await _load();
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Birthday updated')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Birthday updated')));
     }
   }
 
@@ -113,15 +144,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Change Password'),
         content: TextField(controller: controller, obscureText: true),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, controller.text), child: const Text('Save')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Save'),
+          ),
         ],
       ),
     );
     if (newPass == null || newPass.isEmpty) return;
-    await DatabaseService.instance.updateUserPassword(userId: _user!['id'] as int, newPassword: newPass);
+    await DatabaseService.instance.updateUserPassword(
+      userId: _user!['id'] as int,
+      newPassword: newPass,
+    );
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password changed')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Password changed')));
     }
   }
 
@@ -133,8 +175,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Delete Account'),
         content: const Text('This will permanently delete your data.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
@@ -142,7 +190,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await DatabaseService.instance.deleteUser(userId: _user!['id'] as int);
     if (mounted) {
       Navigator.of(context).popUntil((r) => r.isFirst);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Account deleted')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Account deleted')));
     }
   }
 
@@ -150,8 +200,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (iso == null || iso.isEmpty) return '';
     try {
       final d = DateTime.parse(iso);
-      return '${d.year.toString().padLeft(4,'0')}/${d.month.toString().padLeft(2,'0')}/${d.day.toString().padLeft(2,'0')}';
-    } catch (_) { return iso; }
+      return '${d.year.toString().padLeft(4, '0')}/${d.month.toString().padLeft(2, '0')}/${d.day.toString().padLeft(2, '0')}';
+    } catch (_) {
+      return iso;
+    }
   }
 
   @override
@@ -163,73 +215,133 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: const Text('Settings', style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black)),
+        title: const Text(
+          'Settings',
+          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black),
+        ),
         foregroundColor: Colors.black,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(16*s, 12*s, 16*s, 24*s),
+              padding: EdgeInsets.fromLTRB(16 * s, 12 * s, 16 * s, 24 * s),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 96*s,
-                    height: 96*s,
+                    width: 96 * s,
+                    height: 96 * s,
                     decoration: const BoxDecoration(
                       color: Color(0xFFFFE3E3),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.person, size: 48, color: Colors.brown),
+                    child: const Icon(
+                      Icons.person,
+                      size: 48,
+                      color: Colors.brown,
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  Text(_user?['user_code'] as String? ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(
+                    _user?['user_code'] as String? ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 16),
 
                   Container(
-                    decoration: BoxDecoration(color: const Color(0xFFF7DCDC), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black12)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Row(children: [
-                      Expanded(child: Text('Email: ${_user?['email'] ?? ''}')),
-                      IconButton(onPressed: _editEmail, icon: const Icon(Icons.edit_outlined))
-                    ]),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF7DCDC),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text('Email: ${_user?['email'] ?? ''}'),
+                        ),
+                        IconButton(
+                          onPressed: _editEmail,
+                          icon: const Icon(Icons.edit_outlined),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 12),
 
                   Container(
-                    decoration: BoxDecoration(color: const Color(0xFFF7DCDC), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black12)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Row(children: [
-                      Expanded(child: Text('Birthday: ${_formatDob(_user?['dob'] as String?) }')),
-                      IconButton(onPressed: _editDob, icon: const Icon(Icons.edit_outlined))
-                    ]),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF7DCDC),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Birthday: ${_formatDob(_user?['dob'] as String?)}',
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _editDob,
+                          icon: const Icon(Icons.edit_outlined),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 12),
 
                   Container(
-                    decoration: BoxDecoration(color: const Color(0xFFF7DCDC), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black12)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Row(children: const [
-                      Expanded(child: Text('Password: ********')),
-                    ]),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton.icon(onPressed: _editPassword, icon: const Icon(Icons.edit_outlined, size: 18), label: const Text('Change')),
-                  ),
-
-                  const SizedBox(height: 4),
-                  TextButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => const AlertDialog(title: Text('Privacy & Policy'), content: Text('Privacy policy details will be shown here.')),
-                      );
-                    },
-                    child: const Text('Read Privacy and Policy'),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF7DCDC),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      children: [
+                        const Expanded(child: Text('Password: ********')),
+                        IconButton(
+                          onPressed: _editPassword,
+                          icon: const Icon(Icons.edit_outlined),
+                        ),
+                      ],
+                    ),
                   ),
 
-                  const SizedBox(height: 12),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const PrivacyPolicyPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Read Privacy & Policy",
+                        style: TextStyle(
+                          color: const Color(0xFFC2615F),
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
                   OutlinedButton.icon(
                     onPressed: _logout,
                     icon: const Icon(Icons.logout),
@@ -237,18 +349,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black87,
                       side: const BorderSide(color: Colors.black26),
-                      padding: EdgeInsets.symmetric(horizontal: 16*s, vertical: 12*s),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14 * s,
+                        vertical: 10 * s,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 36),
                   ElevatedButton.icon(
                     onPressed: _deleteAccount,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD16B6B),
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 16*s, vertical: 12*s),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14 * s,
+                        vertical: 12 * s,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       elevation: 1,
                     ),
                     icon: const Icon(Icons.delete_outline),
@@ -257,46 +379,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: widget.withNav ? BottomNavigationBar(
-        backgroundColor: backgroundPink,
-        elevation: 0,
-        selectedItemColor: buttonMaroon,
-        unselectedItemColor: Colors.black54,
-        currentIndex: 3,
-        onTap: (i) async {
-          if (i == 0) {
-            Navigator.of(context).pop();
-            return;
-          }
-          if (i == 1) {
-            DateTime start = DateTime.now();
-            final lmdStr = _user?['last_menstrual_day'] as String?;
-            if (lmdStr != null && lmdStr.isNotEmpty) {
-              try { start = DateTime.parse(lmdStr); } catch (_) {}
-            }
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => CalendarScreen(startDate: start, userId: widget.userId),
-              ),
-            );
-            return;
-          }
-          if (i == 2) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => AbnormalitiesScreen(userId: widget.userId),
-              ),
-            );
-            return;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: ''),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/egg.png')), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
-        ],
-      ) : null,
+      bottomNavigationBar: widget.withNav
+          ? BottomNavigationBar(
+              backgroundColor: backgroundPink,
+              elevation: 0,
+              selectedItemColor: buttonMaroon,
+              unselectedItemColor: Colors.black54,
+              currentIndex: 3,
+              onTap: (i) async {
+                if (i == 0) {
+                  Navigator.of(context).pop();
+                  return;
+                }
+                if (i == 1) {
+                  DateTime start = DateTime.now();
+                  final lmdStr = _user?['last_menstrual_day'] as String?;
+                  if (lmdStr != null && lmdStr.isNotEmpty) {
+                    try {
+                      start = DateTime.parse(lmdStr);
+                    } catch (_) {}
+                  }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => CalendarScreen(
+                        startDate: start,
+                        userId: widget.userId,
+                      ),
+                    ),
+                  );
+                  return;
+                }
+                if (i == 2) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          AbnormalitiesScreen(userId: widget.userId),
+                    ),
+                  );
+                  return;
+                }
+              },
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_month),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage('assets/images/egg.png')),
+                  label: '',
+                ),
+                BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
+              ],
+            )
+          : null,
     );
   }
 }
