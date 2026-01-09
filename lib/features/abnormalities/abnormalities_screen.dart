@@ -30,17 +30,11 @@ class _AbnormalitiesScreenState extends State<AbnormalitiesScreen> {
   int _mode = 0; // 0=Results, 1=No Results, 2=All Good
   bool? _seedExact28;
   bool _flagRefreshing = false;
-  bool? _hasAnyData; // first-time users have no data yet
+  bool? _hasPredictions; // true if model predictions exist
 
   @override
   void initState() {
     super.initState();
-    _loadLatest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     _loadLatest();
   }
 
@@ -144,14 +138,13 @@ class _AbnormalitiesScreenState extends State<AbnormalitiesScreen> {
         });
       }
       final db = DatabaseService.instance.db;
-      // Determine if this is a first-time user with no data/logs/predictions
-      final hasSym = await db.query('symptoms_logs', where: 'user_id = ?', whereArgs: [widget.userId], limit: 1);
+      // Check if model predictions exist
       final hasPred0 = await db.query('model_predictions', where: 'user_id = ?', whereArgs: [widget.userId], limit: 1);
-      final hasAny = hasSym.isNotEmpty || hasPred0.isNotEmpty;
+      final hasPredictions = hasPred0.isNotEmpty;
       if (mounted) {
-        setState(() { _hasAnyData = hasAny; });
+        setState(() { _hasPredictions = hasPredictions; });
       }
-      if (!hasAny) {
+      if (!hasPredictions) {
         setState(() {
           _latestPred = null;
           _loading = false;
@@ -263,14 +256,6 @@ class _AbnormalitiesScreenState extends State<AbnormalitiesScreen> {
         return bscore.compareTo(ascore);
       });
 
-      // Always use the highest scored prediction for the header
-      String? label;
-      double? score;
-      if (preds.isNotEmpty) {
-        label = (preds.first['label'] ?? '').toString();
-        score = _canonScore(preds.first); // Use canonical score
-      }
-
       final hundred = preds.where((p) {
         final s = _canonScore(p);
         return (s >= 0.9995); // treat as 100%
@@ -286,6 +271,23 @@ class _AbnormalitiesScreenState extends State<AbnormalitiesScreen> {
             'label': (p['label'] ?? '').toString(),
             'score': _canonScore(p),
           }).toList();
+
+      // Use the highest prediction from likely conditions (>= 0.75) for the header
+      // If no likely conditions, show the highest overall only if it's significant (>= 0.5)
+      String? label;
+      double? score;
+      if (likely.isNotEmpty) {
+        // Show the highest from likely conditions
+        label = (likely.first['label'] ?? '').toString();
+        score = likely.first['score'] as double?;
+      } else if (preds.isNotEmpty) {
+        // Check if highest prediction is at least 0.5 (50%)
+        final highestScore = _canonScore(preds.first);
+        if (highestScore >= 0.5) {
+          label = (preds.first['label'] ?? '').toString();
+          score = highestScore;
+        }
+      }
 
       setState(() {
         _latestPred = pred;
@@ -315,25 +317,37 @@ class _AbnormalitiesScreenState extends State<AbnormalitiesScreen> {
         try {
           await DatabaseService.instance.init();
           final v = await DatabaseService.instance.getAppFlagBool(key: 'seed_exact28');
-          bool any = false;
+          bool hasPreds = false;
           if (widget.userId != null) {
             final db = DatabaseService.instance.db;
-            final sym = await db.query('symptoms_logs', where: 'user_id = ?', whereArgs: [widget.userId], limit: 1);
             final pred = await db.query('model_predictions', where: 'user_id = ?', whereArgs: [widget.userId], limit: 1);
-            any = sym.isNotEmpty || pred.isNotEmpty;
+            hasPreds = pred.isNotEmpty;
           }
+          
+          // Check if flags changed - if so, reload data
+          final flagsChanged = (_seedExact28 != (v == true)) || (_hasPredictions != hasPreds);
+          
           if (mounted) {
             setState(() {
               _seedExact28 = (v == true);
               _mode = _seedExact28 == true ? 2 : 0;
-              _hasAnyData = any;
+              _hasPredictions = hasPreds;
+              _flagRefreshing = false;
             });
+            
+            // Reload data if flags changed to ensure UI is correct
+            if (flagsChanged) {
+              await _loadLatest();
+            }
+          } else {
+            _flagRefreshing = false;
           }
-        } catch (_) {}
-        if (mounted) {
-          setState(() { _flagRefreshing = false; });
-        } else {
-          _flagRefreshing = false;
+        } catch (_) {
+          if (mounted) {
+            setState(() { _flagRefreshing = false; });
+          } else {
+            _flagRefreshing = false;
+          }
         }
       });
     }
@@ -344,11 +358,11 @@ class _AbnormalitiesScreenState extends State<AbnormalitiesScreen> {
         title: const Text('Abnormalities'),
         actions: const [],
       ),
-      body: (_seedExact28 == null || _hasAnyData == null)
+      body: (_seedExact28 == null || _hasPredictions == null)
               ? const Center(child: CircularProgressIndicator())
               : _error != null
               ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
-              : (_hasAnyData == false)
+              : (_hasPredictions == false)
                   ? SingleChildScrollView(
                       padding: const EdgeInsets.all(16),
                       child: _NoResultsCard(

@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _userCode;
   bool? _seedExact28;
   bool _flagRefreshing = false;
-  bool? _hasAnyData; // first-time users have no data
+  bool? _hasPredictions; // true if model predictions exist
 
   static const Color backgroundPink = Color(0xFFF8D6D6);
   static const Color buttonMaroon = Color(0xFF9B4D4B);
@@ -114,8 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
       // Today is the period start OR within the 5-day period
       return start;
     } else {
-      // After the 5-day period - show next predicted cycle (28 days from start)
-      return start.add(const Duration(days: 28));
+      // After the 5-day period - calculate next predicted cycle
+      // Keep adding 28-day cycles until we get a future date
+      DateTime nextCycle = start.add(const Duration(days: 28));
+      while (nextCycle.isBefore(today) || nextCycle.isAtSameMomentAs(today)) {
+        nextCycle = nextCycle.add(const Duration(days: 28));
+      }
+      return nextCycle;
     }
   }
 
@@ -133,27 +138,21 @@ class _HomeScreenState extends State<HomeScreen> {
       final v = await DatabaseService.instance.getAppFlagBool(
         key: 'seed_exact28',
       );
-      bool any = false;
+      bool hasPredictions = false;
       if (widget.userId != null) {
         final db = DatabaseService.instance.db;
-        final sym = await db.query(
-          'symptoms_logs',
-          where: 'user_id = ?',
-          whereArgs: [widget.userId],
-          limit: 1,
-        );
         final pred = await db.query(
           'model_predictions',
           where: 'user_id = ?',
           whereArgs: [widget.userId],
           limit: 1,
         );
-        any = sym.isNotEmpty || pred.isNotEmpty;
+        hasPredictions = pred.isNotEmpty;
       }
       if (mounted)
         setState(() {
           _seedExact28 = (v == true);
-          _hasAnyData = any;
+          _hasPredictions = hasPredictions;
         });
     } catch (_) {}
   }
@@ -382,8 +381,12 @@ class _HomeScreenState extends State<HomeScreen> {
         message = 'Your cycle started on ${_formatShort(_selectedDate!)}';
         headerDate = _formatLong(displayDate);
       } else {
-        // After the 5-day period - show next predicted cycle
-        final nextCycle = periodStart.add(const Duration(days: 28));
+        // After the 5-day period - calculate next predicted cycle
+        // Keep adding 28-day cycles until we get a future date
+        DateTime nextCycle = periodStart.add(const Duration(days: 28));
+        while (nextCycle.isBefore(today) || nextCycle.isAtSameMomentAs(today)) {
+          nextCycle = nextCycle.add(const Duration(days: 28));
+        }
         displayDate = nextCycle;
         message =
             'Your period must likely to start on or around ${_formatShort(nextCycle)}';
@@ -413,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (_seedExact28 == false && _hasAnyData == true) {
+                      if (_seedExact28 == false && _hasPredictions == true) {
                         _showNotificationPopup();
                       }
                     },
@@ -428,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: const Icon(Icons.notifications_none),
                         ),
-                        if (_seedExact28 == false && _hasAnyData == true)
+                        if (_seedExact28 == false && _hasPredictions == true)
                           Positioned(
                             right: -1,
                             top: -1,

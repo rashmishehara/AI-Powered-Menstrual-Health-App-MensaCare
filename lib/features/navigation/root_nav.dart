@@ -55,8 +55,13 @@ class _RootNavState extends State<RootNav> {
       // Today is the period start OR within the 5-day period
       return start;
     } else {
-      // After the 5-day period - show next predicted cycle (28 days from start)
-      return start.add(const Duration(days: 28));
+      // After the 5-day period - calculate next predicted cycle
+      // Keep adding 28-day cycles until we get a future date
+      DateTime nextCycle = start.add(const Duration(days: 28));
+      while (nextCycle.isBefore(today) || nextCycle.isAtSameMomentAs(today)) {
+        nextCycle = nextCycle.add(const Duration(days: 28));
+      }
+      return nextCycle;
     }
   }
 
